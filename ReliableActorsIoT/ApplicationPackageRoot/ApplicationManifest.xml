@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="ReliableActorsIoTType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="ThingGroupActorService_PartitionCount" DefaultValue="10" />
+    <Parameter Name="ThingGroupActorService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="ThingGroupActorService_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="ThingActorService_PartitionCount" DefaultValue="10" />
+    <Parameter Name="ThingActorService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="ThingActorService_TargetReplicaSetSize" DefaultValue="3" />
+  </Parameters>
+  <!-- Importe o ServiceManifest do ServicePackage. O ServiceManifestName e a ServiceManifestVersion 
+       devem corresponder aos atributos Name e Version do elemento ServiceManifest definido no arquivo 
+       ServiceManifest.xml. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="ThingGroupPkg" ServiceManifestVersion="1.0.0" />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="ThingGroupPkg" ServiceManifestVersion="1.0.0" />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="ThingGroupPkg" ServiceManifestVersion="1.0.0" />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="ThingPkg" ServiceManifestVersion="1.0.0" />
+  </ServiceManifestImport>
+  <DefaultServices>
+    <Service Name="ThingGroupActorService" GeneratedIdRef="ae567ec5-628a-46de-b22e-e474d00cca32|Persisted">
+      <StatefulService ServiceTypeName="ThingGroupActorServiceType" TargetReplicaSetSize="[ThingGroupActorService_TargetReplicaSetSize]" MinReplicaSetSize="[ThingGroupActorService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[ThingGroupActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
+    <Service Name="ThingActorService" GeneratedIdRef="2b761fce-9a0b-431d-8328-27118156d2f6|Persisted">
+      <StatefulService ServiceTypeName="ThingActorServiceType" TargetReplicaSetSize="[ThingActorService_TargetReplicaSetSize]" MinReplicaSetSize="[ThingActorService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[ThingActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
+    <!-- A seção abaixo cria instâncias dos tipos de serviço quando uma instância deste 
+         tipo de aplicativo é criada. Também é possível criar uma ou mais instâncias do tipo de serviço usando o módulo 
+         ServiceFabric do PowerShell.
+         
+         O atributo ServiceTypeName abaixo deve corresponder ao nome definido no arquivo ServiceManifest.xml importado. -->
+  </DefaultServices>
+</ApplicationManifest>
