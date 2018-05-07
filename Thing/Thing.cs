@@ -56,7 +56,9 @@ namespace Thing
 
         private int GetPrimaryKeyLong()
         {
-            throw new NotImplementedException();
+            //recupera ator?
+            return this.StateManager.GetStateAsync<int>("ThingState").Id;
+//            throw new NotImplementedException();
         }
     }
 }

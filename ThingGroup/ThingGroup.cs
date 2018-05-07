@@ -14,8 +14,6 @@ namespace ThingGroup
     [StatePersistence(StatePersistence.Persisted)]
     public class ThingGroup : Actor, IThingGroup
     {
-        public Dictionary<string, int> _faultsPerRegion { get; private set; }
-
         public ThingGroup(ActorService actorService, ActorId actorId) 
             : base(actorService, actorId)
         {
@@ -31,21 +29,24 @@ namespace ThingGroup
 
         public Task RegisterDevice(ThingInfo deviceInfo)
         {
-            State._devices.Add(deviceInfo);
-            return Task.FromResult(true);
+            State._devices.Add(deviceInfo); 
+            //salvar estado
+            return this.StateManager.SetStateAsync<int>("ThingState", deviceInfo.DeviceId);
+            //return Task.FromResult(true);
         }
 
         public Task UnregisterDevice(ThingInfo deviceInfo)
         {
             State._devices.Remove(deviceInfo);
-            return Task.FromResult(true);
+            return this.StateManager.RemoveStateAsync("ThingState");
+            //return Task.FromResult(true);
         }
 
         public Task SendTelemetryAsync(ThingTelemetry telemetry)
         {
             if (telemetry.DevelopedFault)
             {
-                if (false == _faultsPerRegion.ContainsKey(telemetry.Region))
+                if (false == State._faultsPerRegion.ContainsKey(telemetry.Region))
                 {
                     State._faultsPerRegion[telemetry.Region] = 0;
                 }
